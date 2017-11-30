@@ -45,14 +45,14 @@ require_once 'Mptt_MultiIndependentTree.php';
 
 ## Installation with Composer
 
-You can install Mptt_MultiIndependentTree via [Composer](https://packagist.org/packages/stefangabos/Mptt_MultiIndependentTree)
+You can install Mptt_MultiIndependentTree via [Composer](https://packagist.org/packages/boardfy/mptt-multi-independent-tree)
 
 ```bash
 # get the latest stable release
-composer require stefangabos/Mptt_MultiIndependentTree
+composer require boardfy/Mptt_MultiIndependentTree
 
 # get the latest commit
-composer require stefangabos/Mptt_MultiIndependentTree:dev-master
+composer require boardfy/Mptt_MultiIndependentTree:dev-master
 ```
 
 ## Install MySQL table
