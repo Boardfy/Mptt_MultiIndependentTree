@@ -6,7 +6,7 @@
  *
  *
  *  @author     Carlos Monroy Fernández <admin@boardfy.com>
- *  @version    1.0.0 (last revision: July 14, 2017)
+ *  @version    3.0.0 (last revision: July 14, 2017)
  *  @copyright  (c) 2017 Boardfy S.L.
  *  @license    http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
  *  @package    Mptt_MultiIndependentTree
