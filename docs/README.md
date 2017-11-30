@@ -1,1 +1,0 @@
-:books: [Documentation](https://stefangabos.github.io/Zebra_Mptt/Zebra_Mptt/Zebra_Mptt.html)

@@ -4,16 +4,17 @@
  *  A PHP library that provides an implementation of the modified preorder tree traversal algorithm making it easy to
  *  implement the MPTT algorithm in your PHP applications.
  *
- *  Read more {@link https://github.com/stefangabos/Zebra_Mptt/ here}
  *
- *  @author     Stefan Gabos <contact@stefangabos.ro>
- *  @version    2.3.5 (last revision: July 14, 2017)
- *  @copyright  (c) 2009 - 2017 Stefan Gabos
+ *  @author     Carlos Monroy Fernández <admin@boardfy.com>
+ *  @version    1.0.0 (last revision: July 14, 2017)
+ *  @copyright  (c) 2017 Boardfy S.L.
  *  @license    http://www.gnu.org/licenses/lgpl-3.0.txt GNU LESSER GENERAL PUBLIC LICENSE
- *  @package    Zebra_Mptt
+ *  @package    Mptt_MultiIndependentTree
  */
 
-class Zebra_Mptt {
+class Mptt_MultiIndependentTree {
+    private $properties;
+    private $link;
 
     /**
      *  Constructor of the class.
@@ -23,23 +24,27 @@ class Zebra_Mptt {
      *
      *  <code>
      *  // include the php file
-     *  require 'path/to/Zebra_Mptt.php';
+     *  require 'path/to/Mptt_MultiIndependentTree.php';
      *
      *  // instantiate the class
-     *  $mptt = new Zebra_Mptt($db_link);
+     *  $mptt = new Mptt_MultiIndependentTree($db_link);
      *  </code>
      *
      *  @param  resource    &$link          An object representing the connection to a MySQL Server, as returned by
      *                                      {@link http://www.php.net/manual/en/mysqli.construct.php mysqli_connect}.
      *
-     *                                      If you use {@link http://stefangabos.ro/php-libraries/zebra-database/ Zebra_Database}
-     *                                      to connect to the database, you can get the connection to the MySQL server
-     *                                      via Zebra_Database's {@link http://stefangabos.ro/wp-content/docs/Zebra_Database/Zebra_Database/Zebra_Database.html#methodget_link get_link}
-     *                                      method.
      *
      *  @param  string      $table_name     (Optional) MySQL table name to be used for storing items.
      *
      *                                      Default is <i>mptt</i>
+     *
+     *  @param  int         $tree_id        (Optional) Tree identifier that allows the multi independent tree optimization
+     *
+     *                                      Default is <i>0</i>
+     *
+     *  @param  string      $tree_id_column (Optional) Name of the column that identifies the tree to work with
+     *
+     *                                      Default is <i>tree_id</i>
      *
      *  @param  string      $id_column      (Optional) Name of the column that uniquely identifies items in the table
      *
@@ -63,7 +68,7 @@ class Zebra_Mptt {
      *
      *  @return void
      */
-    public function __construct(&$link, $table_name = 'mptt', $id_column = 'id', $title_column = 'title', $left_column = 'lft', $right_column = 'rgt', $parent_column = 'parent') {
+    public function __construct(&$link, $table_name = 'mptt', $tree_id = 0, $tree_id_column = 'tree_id', $id_column = 'id', $title_column = 'title', $left_column = 'lft', $right_column = 'rgt', $parent_column = 'parent') {
 
         // stop if required PHP version is not available
         if (version_compare(phpversion(), '5.0.0') < 0) trigger_error('PHP 5.0.0 or greater required', E_USER_ERROR);
@@ -79,13 +84,14 @@ class Zebra_Mptt {
 
             // initialize properties
             $this->properties = array(
-
-                'table_name'    =>  $table_name,
-                'id_column'     =>  $id_column,
-                'title_column'  =>  $title_column,
-                'left_column'   =>  $left_column,
-                'right_column'  =>  $right_column,
-                'parent_column' =>  $parent_column,
+                'table_name'     =>  $table_name,
+                'tree_id'        =>  $tree_id,
+                'tree_id_column' =>  $tree_id_column,
+                'id_column'      =>  $id_column,
+                'title_column'   =>  $title_column,
+                'left_column'    =>  $left_column,
+                'right_column'   =>  $right_column,
+                'parent_column'  =>  $parent_column,
 
             );
 
@@ -121,25 +127,25 @@ class Zebra_Mptt {
      *  $mptt->add($node, 'Child 4', 0);
      *  </code>
      *
-     *  @param  integer     $parent     The ID of the parent node.
+     *  @param  integer      $parent     The ID of the parent node.
      *
-     *                                  Use "0" to add a topmost node.
+     *                                   Use "0" to add a topmost node.
      *
-     *  @param  string      $title      The title of the node.
+     *  @param  string       $title      The title of the node.
      *
-     *  @param  integer     $position   (Optional) The position the node will have among the parent node's children nodes.
+     *  @param  integer|bool $position   (Optional) The position the node will have among the parent node's children nodes.
      *
-     *                                  When parent node is given as "0", this refers to the position the node will have
-     *                                  among the topmost nodes.
+     *                                   When parent node is given as "0", this refers to the position the node will have
+     *                                   among the topmost nodes.
      *
-     *                                  The values are 0-based, meaning that if you want the node to be inserted as
-     *                                  the first child of the target node, you have to use "0", if you want it to
-     *                                  be second, use "1", and so on.
+     *                                   The values are 0-based, meaning that if you want the node to be inserted as
+     *                                   the first child of the target node, you have to use "0", if you want it to
+     *                                   be second, use "1", and so on.
      *
-     *                                  If not given (or given as boolean FALSE), the node will be inserted as the last
-     *                                  of the parent node's children nodes.
+     *                                   If not given (or given as boolean FALSE), the node will be inserted as the last
+     *                                   of the parent node's children nodes.
      *
-     *  @return mixed                   Returns the ID of the newly inserted node or FALSE on error.
+     *  @return mixed                    Returns the ID of the newly inserted node or FALSE on error.
      */
     public function add($parent, $title, $position = false) {
 
@@ -229,7 +235,8 @@ class Zebra_Mptt {
                 SET
                     ' . $this->properties['left_column'] . ' = ' . $this->properties['left_column'] . ' + 2
                 WHERE
-                    ' . $this->properties['left_column'] . ' > ' . $boundary . '
+                    ' . $this->properties['left_column'] . ' > ' . $boundary .
+                    ' AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -240,7 +247,8 @@ class Zebra_Mptt {
                 SET
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' + 2
                 WHERE
-                    ' . $this->properties['right_column'] . ' > ' . $boundary . '
+                    ' . $this->properties['right_column'] . ' > ' . $boundary . ' 
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -250,13 +258,15 @@ class Zebra_Mptt {
                     ' . $this->properties['table_name'] . '
                     (
                         ' . $this->properties['title_column'] . ',
+                        ' . $this->properties['tree_id_column'] . '
                         ' . $this->properties['left_column'] . ',
                         ' . $this->properties['right_column'] . ',
-                        ' . $this->properties['parent_column'] . '
+                        ' . $this->properties['parent_column'] . ',
                     )
                 VALUES
                     (
                         "' . mysqli_real_escape_string($this->link, $title) . '",
+                        ' . $this->properties['tree_id'] . ',
                         ' . ($boundary + 1) . ',
                         ' . ($boundary + 2) . ',
                         ' . $parent . '
@@ -452,6 +462,7 @@ class Zebra_Mptt {
                     ' . $this->properties['left_column'] . ' = ' . $this->properties['left_column'] . ' + ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['left_column'] . ' > ' . $target_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -463,6 +474,7 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' + ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['right_column'] . ' > ' . $target_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -484,6 +496,7 @@ class Zebra_Mptt {
                         ' . $this->properties['table_name'] . '
                         (
                             ' . $this->properties['title_column'] . ',
+                            ' . $this->properties['tree_id_column'] . ',
                             ' . $this->properties['left_column'] . ',
                             ' . $this->properties['right_column'] . ',
                             ' . $this->properties['parent_column'] . '
@@ -491,6 +504,7 @@ class Zebra_Mptt {
                     VALUES
                         (
                             "' . mysqli_real_escape_string($this->link, $properties[$this->properties['title_column']]) . '",
+                            ' . $this->properties['tree_id'] . ',
                             ' . $properties[$this->properties['left_column']] . ',
                             ' . $properties[$this->properties['right_column']] . ',
                             ' . $properties[$this->properties['parent_column']] . '
@@ -622,7 +636,8 @@ class Zebra_Mptt {
                     ' . $this->properties['table_name'] . '
                 WHERE
                     ' . $this->properties['left_column'] . ' >= ' . $this->lookup[$node][$this->properties['left_column']] . ' AND
-                    ' . $this->properties['right_column'] . ' <= ' . $this->lookup[$node][$this->properties['right_column']] . '
+                    ' . $this->properties['right_column'] . ' <= ' . $this->lookup[$node][$this->properties['right_column']] . ' AND
+                    ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -668,6 +683,7 @@ class Zebra_Mptt {
                     ' . $this->properties['left_column'] . ' = ' . $this->properties['left_column'] . ' - ' . $target_rl_difference . '
                 WHERE
                     ' . $this->properties['left_column'] . ' > ' . $boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -679,6 +695,7 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' - ' . $target_rl_difference . '
                 WHERE
                     ' . $this->properties['right_column'] . ' > ' . $boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1149,7 +1166,8 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' * -1
                 WHERE
                     ' . $this->properties['left_column'] . ' >= ' . $this->lookup[$source][$this->properties['left_column']] . ' AND
-                    ' . $this->properties['right_column'] . ' <= ' . $this->lookup[$source][$this->properties['right_column']] . '
+                    ' . $this->properties['right_column'] . ' <= ' . $this->lookup[$source][$this->properties['right_column']] . ' AND
+                    ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1182,6 +1200,7 @@ class Zebra_Mptt {
                     ' . $this->properties['left_column'] . ' = ' . $this->properties['left_column'] . ' - ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['left_column'] . ' > ' . $source_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1193,6 +1212,7 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' - ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['right_column'] . ' > ' . $source_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1267,6 +1287,7 @@ class Zebra_Mptt {
                     ' . $this->properties['left_column'] . ' = ' . $this->properties['left_column'] . ' + ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['left_column'] . ' > ' . $target_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1278,6 +1299,7 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = ' . $this->properties['right_column'] . ' + ' . $source_rl_difference . '
                 WHERE
                     ' . $this->properties['right_column'] . ' > ' . $target_boundary . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1310,6 +1332,7 @@ class Zebra_Mptt {
                     ' . $this->properties['right_column'] . ' = (' . $this->properties['right_column'] . ' - ' . $shift . ') * -1
                 WHERE
                     ' . $this->properties['left_column'] . ' < 0
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1322,6 +1345,7 @@ class Zebra_Mptt {
                     ' . $this->properties['parent_column'] . ' = ' . $target . '
                 WHERE
                     ' . $this->properties['id_column'] . ' = ' . $source . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1380,6 +1404,7 @@ class Zebra_Mptt {
                     ' . $this->properties['title_column'] . ' = "' . $title . '"
                 WHERE
                     ' . $this->properties['id_column'] . ' = ' . $node . '
+                    AND ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
 
             ');
 
@@ -1498,14 +1523,14 @@ class Zebra_Mptt {
     /**
      *  Transforms a node and it's subnodes to an ordered/unordered list.
      *
-     *  The list items will have the class attribute set to "zebra_mptt_item zebra_mptt_item_xx" where "xx" is the ID
+     *  The list items will have the class attribute set to "Mptt_MultiIndependentTree_item Mptt_MultiIndependentTree_item_xx" where "xx" is the ID
      *  of the respective node.
      *
      *  <i>You can further customize the output with regular expressions to suit your needs</i>
      *
      *  <code>
      *  // instantiate the class
-     *  $mptt = new Zebra_Mptt();
+     *  $mptt = new Mptt_MultiIndependentTree();
      *
      *  // make a list out of all nodes as an ordered list and with the
      *  // main list having the class "mylist"
@@ -1543,7 +1568,7 @@ class Zebra_Mptt {
             foreach ($node as $elem)
 
                 // generate output and if the node has children nodes, call this method recursively
-                $out .= '<li class="zebra_mptt_item zebra_mptt_item_' . $elem[$this->properties['id_column']] . '">' .
+                $out .= '<li class="Mptt_MultiIndependentTree_item Mptt_MultiIndependentTree_item_' . $elem[$this->properties['id_column']] . '">' .
                     $elem[$this->properties['title_column']] . (is_array($elem['children']) ? $this->to_list($elem['children'], $list_type) : '') .
                 '</li>';
 
@@ -1571,9 +1596,15 @@ class Zebra_Mptt {
             $result = mysqli_query($this->link, '
 
                 SELECT
-                    *
+                    '. $this->properties['id_column'] .',
+                    '. $this->properties['title_column'] .',
+                    '. $this->properties['left_column'] .',
+                    '. $this->properties['right_column'] .',
+                    '. $this->properties['parent_column'] .',
                 FROM
                     ' . $this->properties['table_name'] . '
+                WHERE
+                    ' . $this->properties['tree_id_column'] . ' = ' . $this->properties['tree_id'] . '
                 ORDER BY
                     ' . $this->properties['left_column'] . '
 

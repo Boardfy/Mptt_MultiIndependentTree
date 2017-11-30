@@ -2,13 +2,13 @@
 <html>
 
     <head>
-        <title>Zebra_Mptt example</title>
+        <title>Mptt_MultiIndependentTree example</title>
         <meta http-equiv="content-type" content="text/html;charset=UTF-8">
     </head>
 
     <body>
 
-        <h2>Zebra_Mptt, database example</h2>
+        <h2>Mptt_MultiIndependentTree, database example</h2>
 
         <p>For this example, you need to first import the <strong>mptt.sql</strong> file from the <strong>install</strong>
         folder and to edit the <strong>example.php file and change your database connection related settings.</strong></p>
@@ -37,10 +37,10 @@
         mysqli_query($connection, 'TRUNCATE TABLE mptt');
 
         // include the Zebra_Mptt class
-        require '../Zebra_Mptt.php';
+        require '../Mptt_MultiIndependentTree.php';
 
         // instantiate the Zebra_Mptt object
-        $mptt = new Zebra_Mptt($connection);
+        $mptt = new Mptt_MultiIndependentTree($connection);
 
         // populate the table
 

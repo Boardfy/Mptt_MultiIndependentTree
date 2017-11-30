@@ -1,15 +1,21 @@
 {
-    "name": "stefangabos/zebra_mptt",
+    "name": "boardfy/mptt-multi-independent-tree",
     "type": "library",
-    "description": "A PHP library providing an implementation of the modified preorder tree traversal algorithm",
-    "keywords": ["php","mptt", "modified", "preorder", "tree", "traversal"],
-    "homepage": "https://github.com/stefangabos/Zebra_Mptt",
+    "description": "A PHP library providing a multi independent tree implementation of the modified preorder tree traversal algorithm",
+    "keywords": ["php","mptt", "modified", "preorder", "multi", "tree", "traversal"],
+    "homepage": "https://github.com/Boardfy/Mptt_MultiIndependentTree",
     "license": "LGPL-3.0",
     "authors": [
         {
-            "name": "Stefan Gabos",
-            "email": "contact@stefangabos.ro",
-            "homepage": "https://github.com/stefangabos/",
+            "name": "Boardfy",
+            "email": "admin@boardfy.com",
+            "homepage": "https://www.boardfy.com/",
+            "role": "Organization"
+        },
+        {
+            "name": "Carlos Monroy Fernández",
+            "email": "cmonroy@boardfy.com",
+            "homepage": "https://github.com/Redominus/",
             "role": "Developer"
         }
     ],
@@ -18,7 +24,7 @@
     },
     "autoload": {
         "classmap": [
-            "Zebra_Mptt.php"
+            "Mptt_MultiIndependentTree.php"
         ]
     }
 }

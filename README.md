@@ -1,10 +1,8 @@
-<img src="https://github.com/stefangabos/zebrajs/blob/master/docs/images/logo.png" alt="zebrajs" align="right">
+<img src="" alt="" align="right">
 
-# Zebra_Mptt
+# Mptt_MultiTree
 
-*A PHP library providing an implementation of the modified preorder tree traversal algorithm*
-
-[![Latest Stable Version](https://poser.pugx.org/stefangabos/zebra_mptt/v/stable)](https://packagist.org/packages/stefangabos/zebra_mptt) [![Total Downloads](https://poser.pugx.org/stefangabos/zebra_mptt/downloads)](https://packagist.org/packages/stefangabos/zebra_mptt) [![Monthly Downloads](https://poser.pugx.org/stefangabos/zebra_mptt/d/monthly)](https://packagist.org/packages/stefangabos/zebra_mptt) [![Daily Downloads](https://poser.pugx.org/stefangabos/zebra_mptt/d/daily)](https://packagist.org/packages/stefangabos/zebra_mptt) [![License](https://poser.pugx.org/stefangabos/zebra_mptt/license)](https://packagist.org/packages/stefangabos/zebra_mptt)
+*A PHP library providing an implementation of the modified preorder tree traversal algorithm with support for multiindependent trees*
 
 ## What is Modified Preorder Tree Traversal
 
@@ -16,25 +14,21 @@ The tradeoff for this efficiency is that updating, deleting and inserting record
 
 For more information about the modified preorder tree traversal method, read this excellent article called [Storing Hierarchical Data in a Database](http://blogs.sitepoint.com/hierarchical-data-database-2/).
 
-## What is Zebra_Mptt
+## What is Mptt_MultiIndependentTree
 
-**Zebra_Mptt** is a PHP library that provides an implementation of the modified preorder tree traversal algorithm making it easy to implement the MPTT algorithm in your PHP applications.
+**Mptt_MultiIndependentTree** is a PHP library, derived from stefangabos' [Zebra_Mptt](https://github.com/stefangabos/Zebra_Mptt), that provides an implementation of the modified preorder tree traversal algorithm making it easy to implement the MPTT algorithm in your PHP applications.
 
-It provides methods for adding nodes anywhere in the tree, deleting nodes, moving and copying nodes around the tree and methods for retrieving various information about the nodes.
+It provides multi independent tree methods for adding nodes anywhere in a tree, deleting nodes, moving and copying nodes around a tree and methods for retrieving various information about the nodes.
 
-Zebra\_Mptt uses [table locks](http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html) making sure that database integrity is always preserved and that concurrent MySQL sessions don't compromise data integrity. Also, Zebra_Mptt uses a caching mechanism which has as result the fact that regardless of the type, or the number of retrieval operations, **the database is read only once per script execution!**
-
-## Support the development of this library
-
-[![Donate](https://img.shields.io/badge/Be%20kind%20%7C%20Donate%20$3%20with%20-%20PayPal%20-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=49VT6G7L5GPAS)
+Mptt\_Multiindependenttree uses [table locks](http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html) making sure that database integrity is always preserved and that concurrent MySQL sessions don't compromise data integrity. Also, Mptt_MultiIndependentTree uses a caching mechanism which has as result the fact that regardless of the type, or the number of retrieval operations, **the database is read only once per script execution!**
 
 ## Features
 
-- provides methods for adding nodes anywhere in the tree, deleting nodes, moving and copying nodes around the tree and methods for retrieving various information about the nodes
+- Allow to use the same table to store independent trees, achieving faster operations on independent trees structures(ie: tree per client). 
+- provides methods for adding nodes anywhere in a tree, deleting nodes, moving and copying nodes around a tree and methods for retrieving various information about the nodes
 - uses a caching mechanism which has as result the fact that regardless of the type, or the number of retrieval operations, **the database is read only once per script execution**
 - uses [table locks](http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html) making sure that database integrity is always preserved and that concurrent MySQL sessions don't compromise data integrity
 - uses **mysqli** extension
-- has [awesome documentation](https://stefangabos.github.io/Zebra_Mptt/Zebra_Mptt/Zebra_Mptt.html)
 - code is heavily commented and generates no warnings/errors/notices when PHP's error reporting level is set to [E_ALL](https://web.archive.org/web/20160226192832/http://www.php.net/manual/en/function.error-reporting.php)
 
 ## Requirements
@@ -46,19 +40,19 @@ PHP 5.0.0+, MySQL 4.1.22+
 Download the latest version, unpack it, and load it in your project
 
 ```php
-require_once 'Zebra_Mptt.php';
+require_once 'Mptt_MultiIndependentTree.php';
 ```
 
 ## Installation with Composer
 
-You can install Zebra_Mptt via [Composer](https://packagist.org/packages/stefangabos/zebra_mptt)
+You can install Mptt_MultiIndependentTree via [Composer](https://packagist.org/packages/stefangabos/Mptt_MultiIndependentTree)
 
 ```bash
 # get the latest stable release
-composer require stefangabos/zebra_mptt
+composer require stefangabos/Mptt_MultiIndependentTree
 
 # get the latest commit
-composer require stefangabos/zebra_mptt:dev-master
+composer require stefangabos/Mptt_MultiIndependentTree:dev-master
 ```
 
 ## Install MySQL table
@@ -68,11 +62,11 @@ Notice a directory called *install* containing a file named *mptt.sql*. This fil
 ## How to use
 
 ```php
-// include the Zebra_Mptt class
-require 'path/to/Zebra_Mptt.php';
+// include the Mptt_MultiIndependentTree class
+require 'path/to/Mptt_MultiIndependentTree.php';
 
 // instantiate a new object
-$mptt = new Zebra_Mptt();
+$mptt = new Mptt_MultiIndependentTree();
 
 // populate the table
 
@@ -104,5 +98,3 @@ $mptt->get_children($meat);
 // get a multidimensional array (a tree) of all the data in the database
 $mptt->get_tree();
 ```
-
-:books: Checkout the [awesome documentation](https://stefangabos.github.io/Zebra_Mptt/Zebra_Mptt/Zebra_Mptt.html)!
