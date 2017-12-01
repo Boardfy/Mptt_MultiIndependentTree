@@ -258,10 +258,10 @@ class Mptt_MultiIndependentTree {
                     ' . $this->properties['table_name'] . '
                     (
                         ' . $this->properties['title_column'] . ',
-                        ' . $this->properties['tree_id_column'] . '
+                        ' . $this->properties['tree_id_column'] . ',
                         ' . $this->properties['left_column'] . ',
                         ' . $this->properties['right_column'] . ',
-                        ' . $this->properties['parent_column'] . ',
+                        ' . $this->properties['parent_column'] . '
                     )
                 VALUES
                     (
@@ -1600,7 +1600,7 @@ class Mptt_MultiIndependentTree {
                     '. $this->properties['title_column'] .',
                     '. $this->properties['left_column'] .',
                     '. $this->properties['right_column'] .',
-                    '. $this->properties['parent_column'] .',
+                    '. $this->properties['parent_column'] .'
                 FROM
                     ' . $this->properties['table_name'] . '
                 WHERE
