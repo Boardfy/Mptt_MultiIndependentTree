@@ -27,7 +27,7 @@ Mptt\_Multiindependenttree uses [table locks](http://dev.mysql.com/doc/refman/5.
 - Allow to use the same table to store independent trees, achieving faster operations on independent trees structures(ie: tree per client). 
 - provides methods for adding nodes anywhere in a tree, deleting nodes, moving and copying nodes around a tree and methods for retrieving various information about the nodes
 - uses a caching mechanism which has as result the fact that regardless of the type, or the number of retrieval operations, **the database is read only once per script execution**
-- uses [table locks](http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html) making sure that database integrity is always preserved and that concurrent MySQL sessions don't compromise data integrity
+- uses [transactions](https://dev.mysql.com/doc/refman/5.6/en/commit.html) making sure that database integrity is always preserved and that concurrent MySQL sessions don't compromise data integrity
 - uses **mysqli** extension
 - code is heavily commented and generates no warnings/errors/notices when PHP's error reporting level is set to [E_ALL](https://web.archive.org/web/20160226192832/http://www.php.net/manual/en/function.error-reporting.php)
 

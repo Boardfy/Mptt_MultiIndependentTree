@@ -224,8 +224,8 @@ class Mptt_MultiIndependentTree {
 
             }
 
-            // lock table to prevent other sessions from modifying the data and thus preserving data integrity
-            mysqli_query($this->link, 'LOCK TABLE ' . $this->properties['table_name'] . ' WRITE');
+            // begin transaction to preserve data integrity across sessions
+            mysqli_begin_transaction($this->link);
 
             // update the nodes in the database having their "left"/"right" values outside the boundary
             mysqli_query($this->link, '
@@ -276,8 +276,8 @@ class Mptt_MultiIndependentTree {
             // get the ID of the newly inserted node
             $node_id = mysqli_insert_id($this->link);
 
-            // release table lock
-            mysqli_query($this->link, 'UNLOCK TABLES');
+            //commit
+            mysqli_commit($this->link);
 
             // add the node to the lookup array
             $this->lookup[$node_id] = array(
@@ -450,8 +450,8 @@ class Mptt_MultiIndependentTree {
 
             }
 
-            // lock table to prevent other sessions from modifying the data and thus preserving data integrity
-            mysqli_query($this->link, 'LOCK TABLE ' . $this->properties['table_name'] . ' WRITE');
+            // begin transaction to preserve data integrity across sessions
+            mysqli_begin_transaction($this->link);
 
             // update the nodes in the database having their "left"/"right" values outside the boundary
             mysqli_query($this->link, '
@@ -536,8 +536,8 @@ class Mptt_MultiIndependentTree {
             // we have to destroy it
             unset($properties);
 
-            // release table lock
-            mysqli_query($this->link, 'UNLOCK TABLES');
+            //commit
+            mysqli_commit($this->link);
 
             // at this point, we have the nodes in the database but we need to also update the lookup array
 
@@ -625,8 +625,8 @@ class Mptt_MultiIndependentTree {
                 // remove node from the lookup array
                 unset($this->lookup[$descendant[$this->properties['id_column']]]);
 
-            // lock table to prevent other sessions from modifying the data and thus preserving data integrity
-            mysqli_query($this->link, 'LOCK TABLE ' . $this->properties['table_name'] . ' WRITE');
+            // begin transaction to preserve data integrity across sessions
+            mysqli_begin_transaction($this->link);
 
             // also remove nodes from the database
             mysqli_query($this->link, '
@@ -699,8 +699,8 @@ class Mptt_MultiIndependentTree {
 
             ');
 
-            // release table lock
-            mysqli_query($this->link, 'UNLOCK TABLES');
+            //commit
+            mysqli_commit($this->link);
 
             // return true as everything went well
             return true;
@@ -1152,8 +1152,8 @@ class Mptt_MultiIndependentTree {
             // the insert, and will need to be updated
             $source_boundary = $this->lookup[$source][$this->properties['left_column']];
 
-            // lock table to prevent other sessions from modifying the data and thus preserving data integrity
-            mysqli_query($this->link, 'LOCK TABLE ' . $this->properties['table_name'] . ' WRITE');
+            // begin transaction to preserve data integrity across sessions
+            mysqli_begin_transaction($this->link);
 
             // we'll multiply the "left" and "right" values of the nodes we're about to move with "-1", in order to
             // prevent the values being changed further in the script
@@ -1349,8 +1349,8 @@ class Mptt_MultiIndependentTree {
 
             ');
 
-            // release table lock
-            mysqli_query($this->link, 'UNLOCK TABLES');
+            //commit
+            mysqli_commit($this->link);
 
             // reorder the lookup array
             $this->_reorder_lookup_array();
@@ -1392,8 +1392,8 @@ class Mptt_MultiIndependentTree {
         // continue only if target node exists in the lookup array
         if (isset($this->lookup[$node])) {
 
-            // lock table to prevent other sessions from modifying the data and thus preserving data integrity
-            mysqli_query($this->link, 'LOCK TABLE ' . $this->properties['table_name'] . ' WRITE');
+            // begin transaction to preserve data integrity across sessions
+            mysqli_begin_transaction($this->link);
 
             // update node's title
             mysqli_query($this->link, '
@@ -1408,8 +1408,8 @@ class Mptt_MultiIndependentTree {
 
             ');
 
-            // release table lock
-            mysqli_query($this->link, 'UNLOCK TABLES');
+            //commit
+            mysqli_commit($this->link);
 
             // update lookup array
             $this->lookup[$node][$this->properties['title_column']] = $title;
